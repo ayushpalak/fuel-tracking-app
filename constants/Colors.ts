@@ -7,6 +7,7 @@ export const primaryBlue = "#8ab4f7";
 export const gray1 = "#848e90";
 export const gray2 = "#ababab";
 export const gray3 = "#2e2f32";
+export const background = "#28282c";
 export const charcoalblue = "#e0f1f0";
 
 export default {

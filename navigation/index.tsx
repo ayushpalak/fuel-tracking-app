@@ -28,6 +28,7 @@ import {
 } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
 import EntryScreen from "../screens/EntryScreen";
+import useSaveEntry from "../hooks/useSaveEntry";
 
 export default function Navigation({
   colorScheme,
@@ -51,6 +52,9 @@ export default function Navigation({
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+  const colorScheme = useColorScheme();
+  const { saveEntry, formValues, handleFormChange } = useSaveEntry();
+
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -63,7 +67,36 @@ function RootNavigator() {
         component={NotFoundScreen}
         options={{ title: "Oops!" }}
       />
-      <Stack.Screen name="Refueling" component={EntryScreen} />
+      <Stack.Screen
+        name="Refueling"
+        options={() => ({
+          title: "Refueling",
+          headerRight: () => (
+            <Pressable
+              onPress={() => saveEntry()}
+              style={({ pressed }) => ({
+                opacity: pressed ? 0.5 : 1,
+              })}
+            >
+              <FontAwesome
+                name="check"
+                size={24}
+                color={Colors[colorScheme].text}
+                style={{ marginLeft: 28 }}
+              />
+            </Pressable>
+          ),
+        })}
+      >
+        {(props) => (
+          <EntryScreen
+            {...props}
+            saveEntry={saveEntry}
+            formValues={formValues}
+            handleFormChange={handleFormChange}
+          />
+        )}
+      </Stack.Screen>
     </Stack.Navigator>
   );
 }
@@ -107,6 +140,14 @@ function BottomTabNavigator() {
           title: "Timeline",
           tabBarIcon: ({ color }) => (
             <Feather name="trending-up" size={24} color={color} />
+          ),
+          headerLeft: () => (
+            <FontAwesome
+              name="bars"
+              size={25}
+              color={Colors[colorScheme].text}
+              style={{ marginLeft: 28 }}
+            />
           ),
         }}
       />
